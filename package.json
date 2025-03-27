@@ -14,15 +14,21 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "^52.0.40",
-    "expo-status-bar": "1.12.1",
-    "react": "18.2.0",
-    "react-native": "0.74.3"
+    "@react-navigation/native": "^7.0.19",
+    "@react-navigation/native-stack": "^7.3.3",
+    "expo-font": "~13.0.4",
+    "expo-splash-screen": "~0.29.22",
+    "expo-status-bar": "~2.0.1",
+    "react": "^18.3.1",
+    "react-native": "^0.76.7",
+    "react-native-safe-area-context": "^5.3.0",
+    "react-native-screens": "^4.9.2"
   },
   "devDependencies": {
-    "@babel/core": "7.24.8",
-    "@types/react": "18.2.79",
-    "typescript": "5.3.3"
+    "@babel/core": "^7.26.10",
+    "@types/react": "~18.3.12",
+    "expo": "^52.0.41",
+    "typescript": "^5.3.3"
   },
   "private": true
 }
