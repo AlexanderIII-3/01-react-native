@@ -35,27 +35,6 @@ const Header = () => {
                         <Text style={styles.tabText}>Tại viện</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.body}>
-                    {/* Danh sách thông tin */}
-
-                    <View style={styles.contentContainer}>
-                        <Text style={styles.titleInfor}> Hỏi nhanh, đáp chuẩn - Đặt khám dễ dàng  </Text>
-
-                        <View style={styles.searchContainer}>
-                            <Ionicons name="search" size={20} color="#888" style={styles.searchIcon} />
-                            <TextInput placeholder="Tìm kiếm" style={styles.searchInput} />
-                        </View>
-                        {data.map((item, index) => (
-                            <TouchableOpacity key={index} style={styles.item}>
-                                <Text style={styles.itemText}>{item}</Text>
-                                <Ionicons name="chevron-forward" size={20} color="#888" />
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-
-
-
-                </View>
 
 
 
@@ -65,19 +44,12 @@ const Header = () => {
 }
 
 // Dữ liệu danh sách
-const data = [
-    "Những quyền lợi khi tham gia chương trình Quản lý bệnh mãn tính...",
-    "Lịch sử hình thành Bệnh viện Quốc tế City",
-    "Khoa Gan mật, Bệnh viện Đa khoa Quốc tế Thu Cúc nhận khám...",
-    "Lịch khám bác sĩ khoa Nam học, Bệnh viện Hữu nghị Việt Đức",
-    "Giới thiệu về Bệnh viện Đa khoa Quốc tế Thu Cúc",
-    "Khoa Thần kinh và Bệnh Alzheimer - Bệnh viện Lão khoa Trung Ương...",
-];
+
 
 // Stylesheet thuần
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+
         backgroundColor: "#F8F9FA",
     },
     header: {
@@ -95,33 +67,14 @@ const styles = StyleSheet.create({
 
 
     },
-    titleInfor: {
-        padding: 10,
-        fontSize: 15,
-        fontWeight: 'bold',
 
-        alignItems: 'center',
-        marginHorizontal: 30,
-
-    },
     search: {
         color: "#888",
         fontSize: 15
     },
-    searchContainer: {
-        flexDirection: "row",
-        backgroundColor: "#EDEDED",
-        margin: 10,
-        borderRadius: 10,
-        padding: 10,
-        alignItems: "center",
-    },
-    searchIcon: {
-        marginRight: 10,
-    },
-    searchInput: {
-        flex: 1,
-    },
+
+
+
     tabContainer: {
         flexDirection: "row",
         justifyContent: "center",
@@ -145,26 +98,8 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#000",
     },
-    contentContainer: {
 
-        paddingHorizontal: 10,
-        borderColor: 'green',
-        borderWidth: 1,
-        backgroundColor: "#92d7ee"
-    },
-    item: {
-        backgroundColor: "#92d7ee",
-        marginBottom: 2,
 
-        padding: 15,
-        marginVertical: 5,
-        borderColor: 'white',
-        borderBottomWidth: 1,
-        borderRadius: 10,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
     itemText: {
         fontSize: 16,
         color: 'white',

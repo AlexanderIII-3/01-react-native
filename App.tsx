@@ -32,12 +32,15 @@ const App = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
+                <Stack.Screen
+                    component={HomeScreen}
+                    options={{ headerShown: false }} name="home" />
 
                 {/* <Stack.Screen name="detail" component={Detail} /> */}
                 {/* <Stack.Screen name="header" component={Header} />
                 <Stack.Screen name="header" component={Header} /> */}
 
-                <Stack.Screen name="home" options={{ title: 'Overview' }} component={HomeScreen} />
+                {/* <Stack.Screen name="home" options={{ title: 'Overview' }} component={HomeScreen} /> */}
             </Stack.Navigator>
 
         </NavigationContainer>
