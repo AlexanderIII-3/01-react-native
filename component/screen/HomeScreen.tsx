@@ -6,6 +6,7 @@ import ServiceScreen from "../review/ServiceScreen";
 import SpecialtySection from "../section/SpecialtySection";
 import ClinicSection from "../section/ClinicSection";
 import OutStandingSection from "../section/OutStandingSection";
+import HandBook from "../section/HandBook";
 
 // Dữ liệu mẫu
 
@@ -22,7 +23,7 @@ const HomeScreen = () => {
                 <SpecialtySection></SpecialtySection>
                 <ClinicSection></ClinicSection>
                 <OutStandingSection></OutStandingSection>
-
+                <HandBook></HandBook>
             </ScrollView>
 
         </View>

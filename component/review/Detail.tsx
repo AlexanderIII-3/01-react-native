@@ -13,7 +13,7 @@ const Detail = () => {
     return (
 
         <View style={[styles.container]} >
-            <Text style={[styles.content, globalStyles.globalFont]}>
+            <Text style={[styles.content]}>
                 Heloo Detaik
             </Text>
             <View style={styles.btn}>

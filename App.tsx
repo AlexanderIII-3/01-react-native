@@ -10,22 +10,14 @@ import { createStaticNavigation, NavigationContainer } from '@react-navigation/n
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from "./component/screen/HomeScreen";
 import Header from './component/container/Header';
+import ProfileDoctor from './component/screen/Doctor/ProfileDoctor';
+import DetailDoctor from './component/screen/Doctor/DetailDoctor'
 
 const App = () => {
 
 
 
-    const [loaded, error] = useFonts({
-        [OPENSANS_REGULAR]: require('./assets/fonts/OpenSans-Regular.ttf'),
-    });
-    useEffect(() => {
-        if (loaded || error) {
-            SplashScreen.hideAsync();
-        }
-    }, [loaded, error]);
-    if (!loaded && !error) {
-        return null;
-    }
+
     const Stack = createNativeStackNavigator<RootStackParamList>()
 
 
@@ -36,11 +28,13 @@ const App = () => {
                     component={HomeScreen}
                     options={{ headerShown: false }} name="home" />
 
-                {/* <Stack.Screen name="detail" component={Detail} /> */}
+                <Stack.Screen
+                    options={{ headerShown: false }}
+                    name="profiledoctor" component={DetailDoctor} />
                 {/* <Stack.Screen name="header" component={Header} />
                 <Stack.Screen name="header" component={Header} /> */}
 
-                {/* <Stack.Screen name="home" options={{ title: 'Overview' }} component={HomeScreen} /> */}
+
             </Stack.Navigator>
 
         </NavigationContainer>

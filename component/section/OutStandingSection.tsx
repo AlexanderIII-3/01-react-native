@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text, FlatList, Image, StyleSheet, ImageBackground } from "react-native";
-
+import { useNavigation } from "@react-navigation/native";
+import { View, Text, FlatList, Image, StyleSheet, ImageBackground, TouchableOpacity } from "react-native";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 const doctors = [
     {
         id: "1",
@@ -20,6 +20,7 @@ const doctors = [
 ];
 
 const OutStandingSection = () => {
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'profiledoctor'>>();
     return (
         <ImageBackground
             source={require("../../assets/background5.png")}
@@ -36,10 +37,15 @@ const OutStandingSection = () => {
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View style={styles.card}>
-                        <Image source={item.image} style={styles.image} />
-                        <Text style={styles.name}>{item.name}</Text>
-                    </View>
+                    <TouchableOpacity onPress={() => { navigation.navigate('profiledoctor') }}>
+                        <View
+
+                            style={styles.card}>
+
+                            <Image source={item.image} style={styles.image} />
+                            <Text style={styles.name}>{item.name}</Text>
+                        </View>
+                    </TouchableOpacity>
                 )}
             />
         </ImageBackground>
@@ -71,8 +77,7 @@ const styles = StyleSheet.create({
     },
     card: {
         padding: 10,
-        borderColor: 'red',
-        borderWidth: 1,
+
         alignItems: "center",
         height: 150,
         marginRight: 15,
