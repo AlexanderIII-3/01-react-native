@@ -1,0 +1,81 @@
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import { createStaticNavigation, NavigationContainer } from '@react-navigation/native';
+import HomeScreen from '../screen/HomeScreen';
+import DetailDoctor from '../screen/Doctor/DetailDoctor';
+import 'react-native-gesture-handler';
+import DoctorClinic from '../screen/Doctor/DoctorClinic';
+import Header from '../container/Header';
+const Stack = createNativeStackNavigator<RootStackParamList>()
+const HomeLayOut = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                component={HomeScreen}
+                options={{ header: () => <Header></Header> }} name="home" />
+
+            <Stack.Screen
+                options={{ headerShown: false }}
+                name="profiledoctor" component={DetailDoctor} />
+            {/* <Stack.Screen name="header" component={Header} />
+                <Stack.Screen name="header" component={Header} /> */}
+
+
+        </Stack.Navigator>
+    )
+
+}
+
+const Layout = () => {
+    const Drawer = createDrawerNavigator()
+
+
+    return (
+        <>
+
+            <Drawer.Navigator
+
+
+
+                screenOptions={{
+                    drawerStyle: {
+                        backgroundColor: 'white',
+                        width: 250,
+                    },
+                    drawerItemStyle: {
+
+                        borderColor: 'black',
+                        marginBottom: 20,
+                        opacity: 0.6,
+                    },
+                    drawerLabelStyle: {
+                        color: 'black',
+                        fontSize: 14,
+                        fontFamily: 'Georgia',
+                    },
+
+
+                }}>
+                <Drawer.Screen
+
+
+
+                    options={{ headerShown: false }}
+                    name='home'
+
+                    component={HomeLayOut}>
+
+
+                </Drawer.Screen>
+                <Drawer.Screen name='Detail'
+
+                    component={DoctorClinic}>
+
+
+                </Drawer.Screen>
+            </Drawer.Navigator>
+        </>
+    )
+}
+export default Layout;

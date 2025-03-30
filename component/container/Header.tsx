@@ -2,13 +2,19 @@ import React from "react";
 import { View, Text, TextInput, ScrollView, TouchableOpacity, Image, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Feather from '@expo/vector-icons/Feather';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { useNavigation } from "@react-navigation/native";
+
 const Header = () => {
+    const navigation: any = useNavigation();
     return (
 
         <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
             <View style={styles.container}>
                 {/* Header chứa logo */}
+
                 <View style={styles.header}>
+                    <FontAwesome6 onPress={() => { navigation.openDrawer(); }} name="bars-staggered" size={24} color="black" />
                     <Image source={require("../../assets/logo.png")} style={styles.logo} />
                     <View>
                         <Feather name="search" size={24} color="#49bce2" />
@@ -51,6 +57,7 @@ const styles = StyleSheet.create({
     container: {
 
         backgroundColor: "#F8F9FA",
+        paddingTop: 30
     },
     header: {
         flexDirection: "row",
