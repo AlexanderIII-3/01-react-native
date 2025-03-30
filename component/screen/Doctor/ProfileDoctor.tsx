@@ -3,7 +3,6 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, } from "react-native";
 import { NativeStackNavigationProp, } from '@react-navigation/native-stack';
 import { useNavigation } from "@react-navigation/native";
 import Header from "../../container/Header";
-import logo from '';
 const ProfileDoctor = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'detail'>>();
 
