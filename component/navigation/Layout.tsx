@@ -7,6 +7,8 @@ import DetailDoctor from '../screen/Doctor/DetailDoctor';
 import 'react-native-gesture-handler';
 import DoctorClinic from '../screen/Doctor/DoctorClinic';
 import Header from '../container/Header';
+import ManageDoctor from '../admin/doctor/ManageDoctor';
+import ManageUser from '../admin/user/ManageUser';
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const HomeLayOut = () => {
     return (
@@ -29,6 +31,8 @@ const HomeLayOut = () => {
 
 const Layout = () => {
     const Drawer = createDrawerNavigator()
+
+    const role = "USER";
 
 
     return (
@@ -57,6 +61,7 @@ const Layout = () => {
 
 
                 }}>
+
                 <Drawer.Screen
 
 
@@ -68,12 +73,23 @@ const Layout = () => {
 
 
                 </Drawer.Screen>
-                <Drawer.Screen name='Detail'
 
-                    component={DoctorClinic}>
+
+                <Drawer.Screen name='Manager Doctor'
+
+                    component={ManageDoctor}>
 
 
                 </Drawer.Screen>
+                <Drawer.Screen name='Manager User'
+
+                    component={ManageUser}>
+
+
+                </Drawer.Screen>
+
+
+
             </Drawer.Navigator>
         </>
     )
