@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, FlatList, Image, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../container/Header";
@@ -7,20 +7,31 @@ import SpecialtySection from "../section/SpecialtySection";
 import ClinicSection from "../section/ClinicSection";
 import OutStandingSection from "../section/OutStandingSection";
 import HandBook from "../section/HandBook";
-import { getAllDoctor } from '../../service/userService'
+import { getAllDoctor, fetchAllClinic, fetchSpecialty } from '../../service/userService'
 // Dữ liệu mẫu
 
 
 const HomeScreen = () => {
-    useEffect(() => {
-        fethListDoctor()
-    })
-
+    const [listDoctor, setListDocTor] = useState([])
+    const [listClinic, setListClinic] = useState([])
+    const [listSpecialty, setListSpecialty] = useState([])
     const fethListDoctor = async () => {
 
-        const res = await getAllDoctor();
-        console.log('check data dcotor', res)
+        const resDoctor = await getAllDoctor();
+        setListDocTor(resDoctor.DT)
+        const resClinic = await fetchAllClinic();
+        setListClinic(resClinic.DT)
+        const resSpecialty = await fetchSpecialty()
+        setListSpecialty(resSpecialty.DT)
     }
+    useEffect(() => {
+        fethListDoctor()
+    }, [])
+    const setListData = (data, setter) => {
+
+
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -29,9 +40,15 @@ const HomeScreen = () => {
             </View>
             <ScrollView style={styles.body}>
                 <ServiceScreen></ServiceScreen>
-                <SpecialtySection></SpecialtySection>
-                <ClinicSection></ClinicSection>
-                <OutStandingSection></OutStandingSection>
+                <SpecialtySection
+                    listSpecialty={listSpecialty}
+                ></SpecialtySection>
+                <ClinicSection
+                    listClinic={listClinic}
+                ></ClinicSection>
+                <OutStandingSection
+                    listDoctor={listDoctor}
+                />
                 <HandBook></HandBook>
             </ScrollView>
 

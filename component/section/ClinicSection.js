@@ -10,31 +10,36 @@ const specialties = [
     // Thêm chuyên khoa khác nếu cần
 ];
 
-const ClinicSection = () => {
+const ClinicSection = (props) => {
+    const { listClinic } = props
+
     return (
         <View style={[styles.container, section.container]}>
             {/* Tiêu đề và "Xem thêm" */}
             <View style={[styles.header, section.header]}>
-                <Text style={[styles.title, section.title]}>Chuyên khoa</Text>
+                <Text style={[styles.title, section.title]}>Cơ sở y tế</Text>
                 <TouchableOpacity>
                     <Text style={[styles.more, section.more]}>Xem thêm</Text>
                 </TouchableOpacity>
             </View>
 
             {/* Danh sách chuyên khoa */}
-            <FlatList
-                data={specialties}
-                keyExtractor={(item) => item.id}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 16 }} // Thêm padding cho 2 bên
-                renderItem={({ item }) => (
-                    <View style={[styles.card, section.card]}>
-                        <Image source={item.image} style={[styles.image, section.image]} />
-                        <Text style={[styles.cardText, section.cardText]}>{[item.name]}</Text>
-                    </View>
-                )}
-            />
+
+            {listClinic &&
+                <FlatList
+                    data={listClinic}
+                    keyExtractor={(item) => item.id}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingHorizontal: 16 }} // Thêm padding cho 2 bên
+                    renderItem={({ item }) => (
+                        <View style={[styles.card, section.card]}>
+                            <Image source={{ uri: item.image }} style={[styles.image, section.image]} />
+                            <Text style={[styles.cardText, section.cardText]}>{[item.name]}</Text>
+                        </View>
+                    )}
+                />
+            }
         </View>
     );
 };

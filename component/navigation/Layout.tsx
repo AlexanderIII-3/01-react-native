@@ -75,18 +75,7 @@ const Layout = () => {
                 </Drawer.Screen>
 
 
-                <Drawer.Screen name='Manager Doctor'
 
-                    component={ManageDoctor}>
-
-
-                </Drawer.Screen>
-                <Drawer.Screen name='Manager User'
-
-                    component={ManageUser}>
-
-
-                </Drawer.Screen>
 
 
 
