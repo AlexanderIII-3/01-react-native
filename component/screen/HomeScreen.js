@@ -50,6 +50,8 @@ const HomeScreen = () => {
                     listDoctor={listDoctor}
                 />
                 <HandBook></HandBook>
+
+
             </ScrollView>
 
         </View>
@@ -68,8 +70,9 @@ const styles = StyleSheet.create({
     },
     body: {
         // marginHorizontal: 10,
-        flex: 8
-    }
+
+    },
+
 
 })
 
