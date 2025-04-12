@@ -6,6 +6,7 @@ import DoctorClinic from "./DoctorClinic";
 import { fetchDetailDoctor } from "../../../service/userService";
 import DoctorShedule from "./DoctorShedule";
 import { WebView } from 'react-native-webview';
+import ExtraInforDoctor from "./ExtraInfoDoctor";
 
 const DetailDoctor = ({ route }) => {
     const [profileDoctor, setProfileDoctor] = useState()
@@ -15,41 +16,26 @@ const DetailDoctor = ({ route }) => {
         setProfileDoctor(resDetail.DT)
     }
     useEffect(() => {
-        console.log('check htl content', profileDoctor?.MarkDown?.contentHtml)
-        fetchProfileDoctor()
 
-    }, [])
+        if (doctorId !== -1) {
+            fetchProfileDoctor()
+
+        }
+
+
+    }, [doctorId])
     return (
         <View style={styles.container}>
             <Header></Header>
             <ScrollView>
 
                 <ProfileDoctor profileDoctor={profileDoctor} ></ProfileDoctor>
-                <DoctorShedule></DoctorShedule>
+                <DoctorShedule profileDoctor={profileDoctor} />
                 <DoctorClinic profileDoctor={profileDoctor}></DoctorClinic>
-                <View style={styles.markdownContent}>
-                    {profileDoctor?.MarkDown?.contentHtml ? (
-                        <WebView
-                            originWhitelist={['*']}
-                            source={{
-                                html: `
-                                            <html>
-                                                <head>
-                                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                                <style>
-                                                    body { font-size: 16px; padding: 10px; color: #333; }
-                                                </style>
-                                                </head>
-                                                <body>${profileDoctor.MarkDown.contentHtml}</body>
-                                            </html>
-                                            `,
-                            }}
-                            style={{ height: 500, width: '100%' }}
-                        />
-                    ) : (
-                        <Text style={{ padding: 10 }}>Không có nội dung</Text>
-                    )}
-                </View>
+                <ExtraInforDoctor
+
+                    profileDoctor={profileDoctor}
+                />
 
             </ScrollView>
         </View>

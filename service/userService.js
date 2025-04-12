@@ -26,3 +26,7 @@ export const fetchDetailDoctor = (id) => {
 
     return axios.get(`/api/v1/get-details-doctor?id=${id}`)
 }
+export const getScheduleDoctorByDate = (doctorId, date) => {
+
+    return axios.get(`/api/get-schedule-doctor-by-date?doctorId=${doctorId}&date=${date}`)
+}

@@ -13,7 +13,6 @@ const OutStandingSection = (props) => {
     const { listDoctor } = props
 
     const viewDetailDoctor = (item) => {
-        console.log('check detaild dcotor', item.id)
         navigation.navigate('profiledoctor', { doctorId: item.id })
 
 

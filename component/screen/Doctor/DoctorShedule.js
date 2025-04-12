@@ -1,110 +1,114 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Button } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-const timeSlots = ["08:00 - 08:30", "08:30 - 09:00", "09:00 - 09:30", "09:30 - 10:00"];
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import moment from "moment";
-const DoctorShedule = () => {
+import { getScheduleDoctorByDate } from "../../../service/userService";
+import { Toast } from "react-native-toast-notifications";
+import { useToast } from 'react-native-toast-notifications';
 
+const DoctorSchedule = ({ profileDoctor }) => {
+    const toast = useToast();
 
+    const [date, setDate] = useState(null);
+    const [allDay, setAllDay] = useState([]);
+    const [doctorId, setDoctorId] = useState(null);
+    const [listTime, setListTime] = useState([]);
 
-    const emojisWithIcons = [
-        { value: 'S1', lable: 'Thứ 2/ 21/3' },
-        { value: 'S2', lable: 'Thứ 3/ 22/3' },
-        { value: 'S3', lable: 'Thứ 4/ 23/3' },
-        { value: 'S4', lable: 'Thứ 5/ 24/3' },
-
-    ];
-    const [selected, setSelected] = useState("");
-
-    const [allDay, setAllDay] = useState();
-    const [availableTime, setAvailableTime] = useState([])
     useEffect(() => {
-        const allDays = getArrDays()
+        const allDays = buildAllDays();
+        setAllDay(allDays);
 
-        setAllDay(allDays)
-        console.log('check alldays', allDays)
+        if (profileDoctor?.id) {
+            setDoctorId(profileDoctor.id);
+        }
+    }, [profileDoctor]);
 
-    }, [])
+    useEffect(() => {
+        if (doctorId && date) {
+            fetchSchedule(doctorId, date);
+        }
+    }, [doctorId, date]);
 
-
-    const getArrDays = () => {
-        let allDays = [];
-
-        moment.locale('vi'); // ✅ Đặt locale chỉ 1 lần trước vòng lặp
+    const buildAllDays = () => {
+        let days = [];
+        moment.locale("vi");
 
         for (let i = 0; i < 7; i++) {
-            let object = {};
-            let date = moment().add(i, 'days'); // ✅ Dùng 1 biến moment duy nhất
+            const date = moment().add(i, "days");
+            const label = i === 0
+                ? `Hôm nay - ${date.format("DD/MM")}`
+                : date.format("dddd - DD/MM").replace(/^./, str => str.toUpperCase());
 
-            if (i === 0) {
-                let ddMM = date.format('DD/MM');
-                object.label = `Hôm nay - ${ddMM}`;
-            } else {
-                let labelVi = date.format('dddd - DD/MM');
-                object.label = labelVi.charAt(0).toUpperCase() + labelVi.slice(1);
-            }
-
-            object.value = date.startOf('day').valueOf();
-
-            allDays.push(object);
+            days.push({ label, value: date.startOf("day").valueOf() });
         }
 
-        return allDays;
+        return days;
     };
 
+    const fetchSchedule = async (doctorId, selectedDate) => {
+        const res = await getScheduleDoctorByDate(doctorId, selectedDate);
+        if (res?.EC === 0) {
+            const dataTime = res.DT.map(item => ({
+                label: item.timeTypeData?.valueVi,
+                value: item.timeType,
+            }));
+            setListTime(dataTime);
+        } else {
+            setListTime([]);
+            toast.error('erro')
+        }
+    };
+
+    const handleDateChange = (item) => {
+        if (item?.value) {
+            setDate(item.value);
+        }
+    };
 
     return (
         <View style={styles.container}>
-
             <View style={{ flex: 1 }}>
                 <SelectDropdown
                     data={allDay}
-                    onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index);
-                    }}
-                    renderButton={(selectedItem, isOpened) => {
-                        return (
-                            <View style={styles.dropdownButtonStyle}>
-
-                                <Text style={styles.dropdownButtonTxtStyle}>
-                                    {selectedItem && selectedItem.label ? selectedItem.label : 'Chọn ngày:'}
-                                </Text>
-
-                            </View>
-                        );
-                    }}
-                    renderItem={(item, index, isSelected) => {
-
-                        console.log('check item', item)
-                        return (
-                            <View style={{ ...styles.dropdownItemStyle, ...(isSelected && { backgroundColor: '#D2D9DF' }) }}>
-
-
-                                <Text style={styles.dropdownItemTxtStyle}>{item.label}</Text>
-                            </View>
-                        );
-                    }}
+                    onSelect={handleDateChange}
+                    renderButton={(selectedItem) => (
+                        <View style={styles.dropdownButtonStyle}>
+                            <Text style={styles.dropdownButtonTxtStyle}>
+                                {selectedItem?.label || "Chọn ngày:"}
+                            </Text>
+                        </View>
+                    )}
+                    renderItem={(item, index, isSelected) => (
+                        <View style={{
+                            ...styles.dropdownItemStyle,
+                            ...(isSelected && { backgroundColor: '#D2D9DF' })
+                        }}>
+                            <Text style={styles.dropdownItemTxtStyle}>{item.label}</Text>
+                        </View>
+                    )}
                     showsVerticalScrollIndicator={false}
                     dropdownStyle={styles.dropdownMenuStyle}
                 />
             </View>
-            <View style={{ flex: 9 }}>
 
+            <View style={{ flex: 9 }}>
                 <Text style={styles.title}>🗓️ LỊCH KHÁM</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollView}>
-                    {timeSlots.map((slot, index) => (
-                        <TouchableOpacity key={index} style={styles.slot}>
-                            <Text style={styles.slotText}>{slot}</Text>
-                        </TouchableOpacity>
-                    ))}
+                    {listTime.length > 0 ? (
+                        listTime.map((slot, index) => (
+                            <TouchableOpacity key={index} style={styles.slot}>
+                                <Text style={styles.slotText}>{slot.label}</Text>
+                            </TouchableOpacity>
+                        ))
+                    ) : (
+                        <Text>Không có lịch khám nào</Text>
+                    )}
                 </ScrollView>
             </View>
-
-
         </View>
     );
-}
+};
+
 const styles = StyleSheet.create({
     container: { padding: 15, backgroundColor: "white", marginTop: 10 },
     title: { marginTop: 20, fontSize: 16, fontWeight: "bold", marginBottom: 10 },
@@ -119,21 +123,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomWidth: 1,
         paddingHorizontal: 12,
-
     },
     dropdownButtonTxtStyle: {
         flex: 1,
         fontSize: 11,
         fontWeight: '500',
-
         color: '#49bce2'
-    },
-    dropdownButtonArrowStyle: {
-        fontSize: 25,
-    },
-    dropdownButtonIconStyle: {
-        fontSize: 28,
-        marginRight: 8,
     },
     dropdownMenuStyle: {
         backgroundColor: '#E9ECEF',
@@ -151,15 +146,9 @@ const styles = StyleSheet.create({
         flex: 1,
         fontWeight: '600',
         fontSize: 10,
-
         borderBottomWidth: 0.5,
-
         color: '#49bce2'
-    },
-    dropdownItemIconStyle: {
-        fontSize: 28,
-        marginRight: 8,
     },
 });
 
-export default DoctorShedule;
+export default DoctorSchedule;

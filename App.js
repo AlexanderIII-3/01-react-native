@@ -8,6 +8,7 @@ import { OPENSANS_REGULAR } from "./ultis/Const";
 
 import { createStaticNavigation, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { ToastProvider } from 'react-native-toast-notifications';
 
 import Layout from './component/navigation/Layout';
 const App = () => {
@@ -19,7 +20,10 @@ const App = () => {
 
     return (
         <NavigationContainer>
-            <Layout></Layout>
+            <ToastProvider>
+                <Layout></Layout>
+            </ToastProvider>
+
         </NavigationContainer>
 
 
