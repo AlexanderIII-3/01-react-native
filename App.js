@@ -1,15 +1,10 @@
-import { View, Text } from 'react-native';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import Detail from "./component/review/Detail";
-import About from "./component/review/ServiceScreen";
-import { OPENSANS_REGULAR } from "./ultis/Const";
 
+import { Provider } from 'react-redux';
 import { createStaticNavigation, NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ToastProvider } from 'react-native-toast-notifications';
+import { PersistGate } from 'redux-persist/integration/react';
 
+import { store, persistor } from './redux/store';
 import Layout from './component/navigation/Layout';
 const App = () => {
 
@@ -19,12 +14,20 @@ const App = () => {
 
 
     return (
-        <NavigationContainer>
-            <ToastProvider>
-                <Layout></Layout>
-            </ToastProvider>
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <NavigationContainer>
 
-        </NavigationContainer>
+
+                    <ToastProvider>
+                        <Layout></Layout>
+                    </ToastProvider>
+
+
+
+                </NavigationContainer>
+            </PersistGate>
+        </Provider>
 
 
 

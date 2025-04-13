@@ -5,9 +5,10 @@ import moment from "moment";
 import { getScheduleDoctorByDate } from "../../../service/userService";
 import { Toast } from "react-native-toast-notifications";
 import { useToast } from 'react-native-toast-notifications';
-
+import { useNavigation } from "@react-navigation/native";
 const DoctorSchedule = ({ profileDoctor }) => {
     const toast = useToast();
+    const navigation = useNavigation();
 
     const [date, setDate] = useState(null);
     const [allDay, setAllDay] = useState([]);
@@ -64,7 +65,11 @@ const DoctorSchedule = ({ profileDoctor }) => {
             setDate(item.value);
         }
     };
+    const handleBooking = (item) => {
+        navigation.navigate('booking')
 
+
+    }
     return (
         <View style={styles.container}>
             <View style={{ flex: 1 }}>
@@ -97,7 +102,7 @@ const DoctorSchedule = ({ profileDoctor }) => {
                     {listTime.length > 0 ? (
                         listTime.map((slot, index) => (
                             <TouchableOpacity key={index} style={styles.slot}>
-                                <Text style={styles.slotText}>{slot.label}</Text>
+                                <Text onPress={() => { handleBooking(slot) }} style={styles.slotText}>{slot.label}</Text>
                             </TouchableOpacity>
                         ))
                     ) : (

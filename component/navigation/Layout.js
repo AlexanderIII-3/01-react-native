@@ -9,10 +9,24 @@ import DoctorClinic from '../screen/Doctor/DoctorClinic';
 import Header from '../container/Header';
 import ManageDoctor from '../admin/doctor/ManageDoctor';
 import ManageUser from '../admin/user/ManageUser';
-const Stack = createNativeStackNavigator<RootStackParamList>()
+import BookingScreen from '../screen/Doctor/booking/BookingScreen';
+import Login from '../screen/auth/Login';
+const Stack = createNativeStackNavigator()
+
 const HomeLayOut = () => {
+
     return (
         <Stack.Navigator>
+
+            <Stack.Screen
+                component={Login}
+                name='login'
+
+            >
+
+
+
+            </Stack.Screen>
             <Stack.Screen
                 component={HomeScreen}
                 options={{ header: () => <Header></Header> }} name="home" />
@@ -20,8 +34,9 @@ const HomeLayOut = () => {
             <Stack.Screen
                 options={{ headerShown: false }}
                 name="profiledoctor" component={DetailDoctor} />
-            {/* <Stack.Screen name="header" component={Header} />
-                <Stack.Screen name="header" component={Header} /> */}
+            <Stack.Screen
+                options={{ header: () => <Header></Header> }}
+                name="booking" component={BookingScreen} />
 
 
         </Stack.Navigator>

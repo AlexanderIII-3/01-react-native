@@ -1,6 +1,13 @@
 
 import axios from '../ultis/instance'
 
+export const handleLoginService = (data) => {
+    return axios.post('api/v1/login', data)
+
+
+}
+
+
 
 export const getAllDoctor = async () => {
 
