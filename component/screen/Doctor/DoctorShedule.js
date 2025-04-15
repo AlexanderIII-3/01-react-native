@@ -6,8 +6,11 @@ import { getScheduleDoctorByDate } from "../../../service/userService";
 import { Toast } from "react-native-toast-notifications";
 import { useToast } from 'react-native-toast-notifications';
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { getListTimeBooking } from '../../../redux/slices/doctorReducer'
 const DoctorSchedule = ({ profileDoctor }) => {
     const toast = useToast();
+    const dispatch = useDispatch()
     const navigation = useNavigation();
 
     const [date, setDate] = useState(null);
@@ -48,11 +51,14 @@ const DoctorSchedule = ({ profileDoctor }) => {
 
     const fetchSchedule = async (doctorId, selectedDate) => {
         const res = await getScheduleDoctorByDate(doctorId, selectedDate);
+        dispatch(getListTimeBooking(res.DT))
+
         if (res?.EC === 0) {
             const dataTime = res.DT.map(item => ({
                 label: item.timeTypeData?.valueVi,
                 value: item.timeType,
             }));
+
             setListTime(dataTime);
         } else {
             setListTime([]);
@@ -66,7 +72,7 @@ const DoctorSchedule = ({ profileDoctor }) => {
         }
     };
     const handleBooking = (item) => {
-        navigation.navigate('booking')
+        navigation.navigate('booking', { timeType: item.value, bookingDate: date })
 
 
     }

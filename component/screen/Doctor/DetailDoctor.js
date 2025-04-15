@@ -7,13 +7,18 @@ import { fetchDetailDoctor } from "../../../service/userService";
 import DoctorShedule from "./DoctorShedule";
 import { WebView } from 'react-native-webview';
 import ExtraInforDoctor from "./ExtraInfoDoctor";
-
+import { useDispatch } from "react-redux";
+import { getDoctorInfo } from '../../../redux/slices/doctorReducer'
 const DetailDoctor = ({ route }) => {
+    const dispatch = useDispatch()
+
     const [profileDoctor, setProfileDoctor] = useState()
     const { doctorId } = route.params;
     const fetchProfileDoctor = async () => {
         const resDetail = await fetchDetailDoctor(doctorId)
         setProfileDoctor(resDetail.DT)
+        dispatch(getDoctorInfo(resDetail.DT))
+
     }
     useEffect(() => {
 

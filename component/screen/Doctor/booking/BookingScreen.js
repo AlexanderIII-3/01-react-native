@@ -1,46 +1,144 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Button, Pressable, Platform, Alert } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from 'react-redux';
+import DateTimePicker from '@react-native-community/datetimepicker'
+import { handleBooking } from '../../../../service/userService'
 
-const BookingScreen = () => {
+import { RadioButton } from 'react-native-paper';
+
+const BookingScreen = ({ route }) => {
+    const { timeType, bookingDate } = route.params;
     const navigation = useNavigation();
     const userInfo = useSelector((state) => state.user.userInfo);
-    console.log('check state redux', userInfo)
-
+    const doctorInfo = useSelector((state) => state.doctor.doctorInfor);
+    const listTime = useSelector((state) => state.doctor.listTime)
     useEffect(() => {
+        // let data = buldDateBooking()
+        // console.log('check data sending', data)
         const name = `${userInfo.firstName} ${userInfo.lastName}`
         setPatientName(name)
         setPhone(userInfo.phoneNumber)
         setAddressDetail(userInfo.address)
         setEmail(userInfo.email)
+        setDoctorId(doctorInfo?.id)
+        setTimeTypeSel(timeType)
+        setDateBooking(bookingDate)
 
     }, [userInfo])
-
-    const [bookingFor, setBookingFor] = useState('other');
+    const [timeTypeSel, setTimeTypeSel] = useState()
     const [patientName, setPatientName] = useState('');
     const [gender, setGender] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
-    const [dob, setDob] = useState('');
-    const [district, setDistrict] = useState('');
-    const [ward, setWard] = useState('');
+    const [doctorId, setDoctorId] = useState()
     const [addressDetail, setAddressDetail] = useState('');
     const [reason, setReason] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('later');
+    const [date, setDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+    const [timeStamp, setTimeStamp] = useState(null)
+    const [dateOfBirth, setDateOfBirth] = useState('')
+    const [dateBooking, setDateBooking] = useState('')
 
+    const handleConfirmBooking = async () => {
+
+        const data = {
+
+            patientName,
+            email,
+            phone,
+            addressDetail,
+            timeStamp,
+            reason,
+            dateBooking,
+            doctorId,
+            timeTypeSel,
+            gender
+
+
+        }
+        let res = await handleBooking(data)
+        if (res && res.EC === 0) {
+
+            Alert.alert('Thông báo!', 'Bạn đã đặt lịch thành công!')
+            setPatientName('')
+            setPhone('')
+            setAddressDetail('')
+            setEmail('')
+            setDoctorId(doctorInfo?.id)
+            setTimeTypeSel('')
+            setDateBooking('')
+            setReason('')
+            setGender('')
+
+        } else {
+            Alert.alert('Thông báo!', `${res.EM}`)
+        }
+
+
+
+    }
+    const toggleDatepicker = () => {
+        setOpen(!open)
+
+    };
+    const onChange = ({ type }, selectedDate) => {
+        if (type == 'set') {
+            const currentDate = selectedDate;
+            const dateStamp = selectedDate.getTime();
+            setTimeStamp(dateStamp)
+
+
+
+
+            setDate(currentDate)
+        } else {
+            toggleDatepicker()
+        }
+
+
+    }
+    const comfirmDate = () => {
+        const formattedDate = date.toLocaleDateString('vi-VN', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
+        setDateOfBirth(formattedDate)
+
+
+
+        toggleDatepicker()
+
+    }
+    // const buldDateBooking = () => {
+    //     const result = ''
+    //     {
+    //         listTime && listTime.map((item, index) => {
+
+    //             if (timeType === item.timeType) {
+    //                 result = item.timeTypeData.valueVi
+
+    //                 return result
+    //             }
+    //         })
+
+    //     }
+
+    // }
     return (
         <ScrollView style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>BookingCare</Text>
                 <Text style={styles.sectionTitle}>ĐẶT LỊCH KHÁM</Text>
 
                 <View style={styles.doctorInfo}>
                     <Text style={styles.doctorName}>Tiến sĩ, Bác sĩ Nguyễn Thị Thanh Thủy</Text>
                     <Text style={styles.timeSlot}>08:00 - 08:30 - Thứ 2 - 14/04/2025</Text>
-                    <Text style={styles.clinicInfo}>Phòng khám Bệnh viện Đại học Y Dược 1</Text>
-                    <Text style={styles.address}>20-22 Dương Quang Trung, Phường 12, Quận 10, Tp. HCM</Text>
+                    <Text style={styles.clinicInfo}>{doctorInfo?.Doctor_Infor?.nameClinic}</Text>
+                    <Text style={styles.address}>{doctorInfo?.Doctor_Infor?.addressClinic}</Text>
                 </View>
 
                 <View style={styles.priceContainer}>
@@ -69,13 +167,7 @@ const BookingScreen = () => {
 
             <View style={styles.section}>
                 <Text style={styles.sectionSubtitle}>Thông tin người đặt lịch</Text>
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        value=''
-                        style={styles.input}
-                        placeholder="Họ tên người đặt lịch"
-                    />
-                </View>
+
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
@@ -100,17 +192,19 @@ const BookingScreen = () => {
 
                 <View style={styles.radioGroup}>
                     <View style={styles.radioOption}>
-                        {/* <CheckBox
-                            value={gender === 'male'}
-                            onValueChange={() => setGender('male')}
-                        /> */}
+                        <RadioButton
+                            value={gender}
+                            status={gender === 'M' ? 'checked' : 'unchecked'}
+                            onPress={() => setGender('M')}
+                        />
                         <Text style={styles.radioLabel}>Nam</Text>
                     </View>
                     <View style={styles.radioOption}>
-                        {/* <CheckBox
-                            value={gender === 'female'}
-                            onValueChange={() => setGender('female')}
-                        /> */}
+                        <RadioButton
+                            value={gender}
+                            status={gender === 'F' ? 'checked' : 'unchecked'}
+                            onPress={() => setGender('F')}
+                        />
                         <Text style={styles.radioLabel}>Nữ</Text>
                     </View>
                 </View>
@@ -136,17 +230,90 @@ const BookingScreen = () => {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Ngày/tháng/năm sinh (bắt buộc)"
-                        value={dob}
-                        onChangeText={setDob}
-                    />
+                    {open &&
+                        <DateTimePicker
+
+                            mode='date'
+                            display='spinner'
+                            value={date}
+                            onChange={onChange}
+                            style={styles.datePicker}
+                            maximumDate={new Date('2025-4-14')}
+                            minimumDate={new Date('1890-1-1')}
+                            locale='vi-VN'
+                        />
+
+                    }
+                    {open && Platform.OS === 'ios' && (
+
+
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-around'
+                            }}
+
+                        >
+                            <TouchableOpacity style={[
+
+                                styles.button,
+                                styles.pickerButton,
+                                { backgroundColor: '#11182711' }
+                            ]}
+
+                                onPress={toggleDatepicker}
+                            >
+
+                                <Text
+                                    style={[
+                                        styles.buttonText,
+                                        { color: '#075985' }
+                                    ]}
+                                > Cancel</Text>
+                            </TouchableOpacity>
+
+
+
+                            <TouchableOpacity style={[
+
+                                styles.button,
+                                styles.pickerButton,
+                                { backgroundColor: '#012712' }
+                            ]}
+
+                                onPress={comfirmDate}
+                            >
+
+                                <Text
+                                    style={[
+                                        styles.buttonText,
+                                    ]}
+                                > Confirm</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    )}
+
+                    {!open &&
+
+                        <Pressable onPress={toggleDatepicker}>
+
+
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Ngày/tháng/năm sinh (bắt buộc)"
+                                value={dateOfBirth}
+                                editable={false}
+                                onPressIn={toggleDatepicker}
+                            />
+                        </Pressable>
+                    }
+
                 </View>
             </View>
 
             <View style={styles.section}>
-                <Text style={styles.sectionSubtitle}>Ngày/tháng/năm sinh (bắt buộc)</Text>
+                <Text style={styles.sectionSubtitle}>Địa chỉ (bắt buộc)</Text>
 
 
 
@@ -156,7 +323,7 @@ const BookingScreen = () => {
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Tổ/khu/thôn/xóm (bắt buộc)"
+                        placeholder="địa chỉ"
                         value={addressDetail}
                         onChangeText={setAddressDetail}
                     />
@@ -213,8 +380,15 @@ const BookingScreen = () => {
                 <Text style={styles.warningItem}>- Điền đầy đủ, đúng và vui lòng kiểm tra lại thông tin trước khi ấn "Xác nhận"</Text>
             </View>
 
-            <TouchableOpacity style={styles.confirmButton}>
-                <Text style={styles.confirmButtonText}>Xác nhận</Text>
+            <TouchableOpacity
+
+                onPress={() => { handleConfirmBooking() }}
+
+                style={styles.confirmButton}>
+                <Text
+
+
+                    style={styles.confirmButtonText}>Xác nhận</Text>
             </TouchableOpacity>
         </ScrollView>
     );
@@ -228,6 +402,12 @@ const styles = StyleSheet.create({
     },
     header: {
         marginBottom: 20,
+    },
+    buttonText: {
+        fontSize: 14,
+        fontWeight: 600,
+        color: '#fff'
+
     },
     title: {
         fontSize: 24,
@@ -262,6 +442,11 @@ const styles = StyleSheet.create({
     address: {
         fontSize: 14,
         color: '#555',
+    },
+    pickerButton: {
+        paddingHorizontal: 20,
+        padding: 10,
+        borderRadius: 20
     },
     priceContainer: {
         borderTopWidth: 1,
@@ -382,6 +567,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    datePicker: {
+        height: 120,
+        marginTop: -10
+    }
 });
 
 export default BookingScreen;

@@ -18,7 +18,7 @@ const HomeLayOut = () => {
     return (
         <Stack.Navigator>
 
-            <Stack.Screen
+            {/* <Stack.Screen
                 component={Login}
                 name='login'
 
@@ -26,7 +26,7 @@ const HomeLayOut = () => {
 
 
 
-            </Stack.Screen>
+            </Stack.Screen> */}
             <Stack.Screen
                 component={HomeScreen}
                 options={{ header: () => <Header></Header> }} name="home" />
