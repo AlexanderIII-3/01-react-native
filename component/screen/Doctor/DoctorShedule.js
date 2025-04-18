@@ -72,7 +72,7 @@ const DoctorSchedule = ({ profileDoctor }) => {
         }
     };
     const handleBooking = (item) => {
-        navigation.navigate('booking', { timeType: item.value, bookingDate: date })
+        navigation.navigate('booking', { timeType: { item }, bookingDate: date })
 
 
     }

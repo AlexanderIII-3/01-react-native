@@ -5,28 +5,17 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { handleBooking } from '../../../../service/userService'
-
+var _ = require('lodash');
 import { RadioButton } from 'react-native-paper';
-
+import moment from 'moment';
 const BookingScreen = ({ route }) => {
     const { timeType, bookingDate } = route.params;
+    const dataTime = route.params;
     const navigation = useNavigation();
     const userInfo = useSelector((state) => state.user.userInfo);
     const doctorInfo = useSelector((state) => state.doctor.doctorInfor);
     const listTime = useSelector((state) => state.doctor.listTime)
-    useEffect(() => {
-        // let data = buldDateBooking()
-        // console.log('check data sending', data)
-        const name = `${userInfo.firstName} ${userInfo.lastName}`
-        setPatientName(name)
-        setPhone(userInfo.phoneNumber)
-        setAddressDetail(userInfo.address)
-        setEmail(userInfo.email)
-        setDoctorId(doctorInfo?.id)
-        setTimeTypeSel(timeType)
-        setDateBooking(bookingDate)
-
-    }, [userInfo])
+    console.log('check data tim', timeType?.item?.value)
     const [timeTypeSel, setTimeTypeSel] = useState()
     const [patientName, setPatientName] = useState('');
     const [gender, setGender] = useState('');
@@ -40,9 +29,48 @@ const BookingScreen = ({ route }) => {
     const [open, setOpen] = useState(false)
     const [timeStamp, setTimeStamp] = useState(null)
     const [dateOfBirth, setDateOfBirth] = useState('')
-    const [dateBooking, setDateBooking] = useState('')
+    const [dateBooking, setDateBooking] = useState('');
+    const [timeString, setTimeString] = useState('')
+    useEffect(() => {
+        // let data = buldDateBooking()
+        // console.log('check data sending', data)
+        const name = `${userInfo.firstName} ${userInfo.lastName}`
+        setPatientName(name)
+        setPhone(userInfo.phoneNumber)
+        setAddressDetail(userInfo.address)
+        setEmail(userInfo.email)
+        setDoctorId(doctorInfo?.id)
+        setTimeTypeSel(timeType?.item?.value)
+        setDateBooking(bookingDate)
+        const time = buildTimeBooking(dataTime)
+        setTimeString(time)
+
+
+    }, [userInfo])
+
+
+    const buildTimeBooking = (dataTime) => {
+        if (dataTime && !_.isEmpty(dataTime)) {
+            let time = dataTime.timeType.item.label
+
+            let date = moment.unix(+dataTime.bookingDate / 1000).format('dddd - DD/MM/YYYY')
+
+
+
+
+
+
+            return (
+                `${time} -${date}`
+            )
+        }
+        return ''
+    };
+
 
     const handleConfirmBooking = async () => {
+
+
 
         const data = {
 
@@ -55,11 +83,14 @@ const BookingScreen = ({ route }) => {
             dateBooking,
             doctorId,
             timeTypeSel,
-            gender
+            gender,
+            timeString
 
 
         }
         let res = await handleBooking(data)
+
+
         if (res && res.EC === 0) {
 
             Alert.alert('Thông báo!', 'Bạn đã đặt lịch thành công!')
@@ -76,10 +107,15 @@ const BookingScreen = ({ route }) => {
         } else {
             Alert.alert('Thông báo!', `${res.EM}`)
         }
-
-
-
     }
+
+
+
+
+
+
+
+
     const toggleDatepicker = () => {
         setOpen(!open)
 
@@ -172,7 +208,7 @@ const BookingScreen = ({ route }) => {
                     <TextInput
                         style={styles.input}
                         placeholder="Số điện thoại"
-                        value="0865858562"
+                        value={phone}
                         keyboardType="phone-pad"
                     />
                 </View>
