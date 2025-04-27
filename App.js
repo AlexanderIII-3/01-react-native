@@ -1,3 +1,4 @@
+import * as Linking from 'expo-linking';
 
 import { Provider } from 'react-redux';
 import { createStaticNavigation, NavigationContainer } from '@react-navigation/native';
@@ -9,14 +10,27 @@ import Layout from './component/navigation/Layout';
 const App = () => {
 
 
-
+    const linking = {
+        prefixes: ['BookingCare://'],
+        config: {
+            screens: {
+                Confirm: {
+                    path: 'verifly-booking',
+                    parse: {
+                        token: (token) => `${token}`,
+                        doctorId: (id) => `${id}`
+                    }
+                }
+            }
+        }
+    };
 
 
 
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                <NavigationContainer>
+                <NavigationContainer linking={linking}>
 
 
                     <ToastProvider>

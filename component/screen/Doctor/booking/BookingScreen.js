@@ -7,15 +7,28 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import { handleBooking } from '../../../../service/userService'
 var _ = require('lodash');
 import { RadioButton } from 'react-native-paper';
+import ModalConfirm from './modal/ModalConfirm';
 import moment from 'moment';
 const BookingScreen = ({ route }) => {
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const handleBookingSuccess = () => {
+        setModalVisible(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalVisible(false);
+    };
+
+
+
     const { timeType, bookingDate } = route.params;
     const dataTime = route.params;
     const navigation = useNavigation();
     const userInfo = useSelector((state) => state.user.userInfo);
     const doctorInfo = useSelector((state) => state.doctor.doctorInfor);
     const listTime = useSelector((state) => state.doctor.listTime)
-    console.log('check data tim', timeType?.item?.value)
     const [timeTypeSel, setTimeTypeSel] = useState()
     const [patientName, setPatientName] = useState('');
     const [gender, setGender] = useState('');
@@ -93,7 +106,7 @@ const BookingScreen = ({ route }) => {
 
         if (res && res.EC === 0) {
 
-            Alert.alert('Thông báo!', 'Bạn đã đặt lịch thành công!')
+            setModalVisible(!modalVisible)
             setPatientName('')
             setPhone('')
             setAddressDetail('')
@@ -103,7 +116,7 @@ const BookingScreen = ({ route }) => {
             setDateBooking('')
             setReason('')
             setGender('')
-
+            navigation.navigate('home')
         } else {
             Alert.alert('Thông báo!', `${res.EM}`)
         }
@@ -124,6 +137,7 @@ const BookingScreen = ({ route }) => {
         if (type == 'set') {
             const currentDate = selectedDate;
             const dateStamp = selectedDate.getTime();
+            console.log('check date stamp', selectedDate.getTime())
             setTimeStamp(dateStamp)
 
 
@@ -168,6 +182,7 @@ const BookingScreen = ({ route }) => {
     return (
         <ScrollView style={styles.container}>
             <View style={styles.header}>
+                <ModalConfirm visible={modalVisible} onClose={handleCloseModal} />
                 <Text style={styles.sectionTitle}>ĐẶT LỊCH KHÁM</Text>
 
                 <View style={styles.doctorInfo}>

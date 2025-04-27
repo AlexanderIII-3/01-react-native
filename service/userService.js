@@ -41,3 +41,9 @@ export const handleBooking = (data) => {
 
     return axios.post('/api/patient-booking-appointment', data)
 }
+export const fetchMedicalHistory = (param) => {
+
+    return axios.get(`/api/v1/get-history?patientId=${param.patientId}`)
+
+
+}

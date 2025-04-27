@@ -4,7 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation } from "@react-navigation/native";
-
 const Header = () => {
     const navigation: any = useNavigation();
     return (
@@ -34,12 +33,14 @@ const Header = () => {
                     <TouchableOpacity style={[styles.tab, styles.activeTab]}>
                         <Text style={[styles.tabText, styles.activeTabText]}>Tất cả</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.tab}>
-                        <Text style={styles.tabText}>Tại nhà</Text>
+                    <TouchableOpacity style={styles.tab} onPress={() => { navigation.navigate('history'); }} >
+                        <Text style={styles.tabText}>Lịch sử</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.tab}>
                         <Text style={styles.tabText}>Tại viện</Text>
                     </TouchableOpacity>
+
+
                 </View>
 
 
