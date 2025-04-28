@@ -2,23 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, Modal, Pressable, Alert } from 'react-native';
 import { fetchMedicalHistory } from '../../../service/userService';
 import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
+var _ = require('lodash');
 
+import { useDispatch, useSelector } from 'react-redux';
+import { handleBooking } from '../../../service/userService';
 const MedicalHistoryScreen = () => {
     const userinfo = useState(useSelector((state) => state.user.userInfo))
     const [authuser, setAuthuser] = useState('')
     const [history, setHistory] = useState([]);
+    const [timeString, setTimeString] = useState('')
 
     useEffect(() => {
         fetchHistory();
         setAuthuser(userinfo)
-        console.log(userinfo[0].address)
+
 
     }, [])
-    console.log(authuser)
+
     const fetchHistory = async () => {
         try {
-            const response = await fetchMedicalHistory({ patientId: 3 });
+            const response = await fetchMedicalHistory({ patientId: userinfo[0].id });
+            console.log('check user infor', authuser)
             setHistory(response.data);
 
         } catch (error) {
@@ -31,27 +35,94 @@ const MedicalHistoryScreen = () => {
 
     const handleRebook = (item) => {
         if (authuser) {
-            console.log('cehck seru dafa', authuser[0].firstName + userinfo[0].lastName)
-            const data = {
-                email: userinfo[0].email,
-                patientName: authuser[0].firstName + userinfo[0].lastName,
-                addressDetail: authuser[0].address
+
+
+            if (item) {
+
+
+
+                const time = buildTimeBooking(item)
+
+
+                setTimeString(time)
+
+                const setdateBooking = new Date
+
+
+
+                const data = {
+                    email: userinfo[0].email,
+                    patientName: authuser[0].firstName + userinfo[0].lastName,
+                    addressDetail: authuser[0].address,
+                    gender: authuser[0].gender,
+                    dateBooking: new Date().setHours(0, 0, 0, 0),
+
+                    doctorId: item.doctorId,
+                    timeTypeSel: item.timeType,
+                    timeString: timeString,
+                    reason: item.reason,
+                    action: 'HISTORY'
+
+
+
+
+
+
+                }
+                Alert.alert(
+                    'Đặt lịch lại',
+                    `Bạn muốn đặt lịch lại với bác sĩ: ${item?.doctor.lastName}  ${item?.doctor.firstName} 
+                     cho triệu chứng :  ${item.reason}?`,
+                    [
+                        { text: 'Huỷ', style: 'cancel' },
+                        { text: 'Đồng ý', onPress: () => { bookingHistory(data) } },
+                    ]
+                );
+            }
+
+        }
+
+
+
+    };
+    const buildTimeBooking = (history) => {
+        if (history && !_.isEmpty(history)) {
+
+
+            let time = history?.timebooking?.valueVi
+
+            const datatime = new Date().getTime()
+
+            let date = moment.unix(datatime / 1000).format('dddd - DD/MM / YYYY')
+
+
+
+
+
+
+            return (
+                `${time} -${date}`
+            )
+        }
+        return ''
+    };
+    const bookingHistory = async (data) => {
+        try {
+            const res = await handleBooking(data)
+            if (res && res.EC === 0) {
+                Alert.alert('Thông báo', res?.EM, [{ text: 'OK' }])
 
 
             }
+        } catch (error) {
+            console.log(error)
         }
 
-        // console.log('check item ne ', item)
 
-        // Alert.alert(
-        //     'Đặt lịch lại',
-        //     `Bạn muốn đặt lịch lại với ${item.doctor} cho bệnh ${item.reason}?`,
-        //     [
-        //         { text: 'Huỷ', style: 'cancel' },
-        //         { text: 'Đồng ý', onPress: () => console.log('Rebooking for', item.reason) },
-        //     ]
-        // );
-    };
+
+    }
+
+
 
     const handlePreview = (imageUri) => {
         setSelectedImage(imageUri);

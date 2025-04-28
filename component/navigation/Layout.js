@@ -25,10 +25,10 @@ const HomeLayOut = () => {
                 name='login'
 
             >
-
-
-
             </Stack.Screen> */}
+
+
+
 
 
             <Stack.Screen
