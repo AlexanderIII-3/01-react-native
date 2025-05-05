@@ -13,6 +13,7 @@ import BookingScreen from '../screen/Doctor/booking/BookingScreen';
 import Login from '../screen/auth/Login';
 import ConfirmScreen from '../screen/Doctor/booking/ConfirmScreen';
 import MedicalHistoryScreen from '../screen/patient/HistoryScreen';
+import HealthTracking from '../screen/patient/HealthTracking';
 const Stack = createNativeStackNavigator()
 
 const HomeLayOut = () => {
@@ -25,8 +26,8 @@ const HomeLayOut = () => {
                 name='login'
 
             >
-            </Stack.Screen> */}
-
+            </Stack.Screen>
+ */}
 
 
 
@@ -46,8 +47,12 @@ const HomeLayOut = () => {
 
                 name='confirm' component={ConfirmScreen} />
             <Stack.Screen
-
+                options={{ header: () => <Header></Header> }}
                 name='history' component={MedicalHistoryScreen} />
+
+            <Stack.Screen
+                options={{ header: () => <Header></Header> }}
+                name='health' component={HealthTracking} />
 
 
 

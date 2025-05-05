@@ -47,3 +47,16 @@ export const fetchMedicalHistory = (param) => {
 
 
 }
+export const fetchHeathTracking = (patientId) => {
+    return axios.get(`/api/v1/get-health-patient?patientId=${patientId}`)
+}
+export const handleSaveInforPatient = (data) => {
+
+    return axios.post(`/api/save-infor-patient`, data)
+
+}
+export const fetchUserBookings = (patientId) => {
+    return axios.get(`/api/v1/get-list-booking?patientId=${patientId}`)
+
+
+};
