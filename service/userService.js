@@ -60,3 +60,6 @@ export const fetchUserBookings = (patientId) => {
 
 
 };
+export const cancelBooking = (bokingId) => {
+    return axios.post(`/api/v1/cancel-booking`, { bokingId })
+}
