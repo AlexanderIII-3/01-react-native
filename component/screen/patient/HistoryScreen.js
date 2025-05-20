@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Modal, Pressable, StyleSheet, Alert } from 'react-native';
+import { View, Text, FlatList, Modal, Pressable, StyleSheet, Alert, Button } from 'react-native';
 import { fetchMedicalHistory } from '../../../service/userService';
 import { WebView } from 'react-native-webview';
 import { useSelector } from 'react-redux';
+
+const ChatScrenn = () => {
+
+    <View>
+        <WebView
+            source={{ uri: 'https://www.google.co.uk' }}
+        ></WebView>
+    </View>
+}
 const MedicalHistoryScreen = () => {
     const [history, setHistory] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -38,24 +47,31 @@ const MedicalHistoryScreen = () => {
     };
 
     const renderItem = ({ item }) => (
-        <View style={styles.card}>
-            <View style={styles.infoContainer}>
-                <Text style={styles.disease}>{item.reason}</Text>
-                <Text style={styles.doctor}>
-                    👨‍⚕️ {`${item?.doctor?.firstName} ${item?.doctor?.lastName}`}
-                </Text>
-                <Text style={styles.time}>🕒 {item?.timebooking?.valueVi}</Text>
-                <Text style={styles.time}>Giá khám: {item?.doctor?.Doctor_Infor?.priceTypeData?.valueVi}</Text>
-                <View style={styles.buttonRow}>
-                    <Pressable
-                        style={styles.previewButton}
-                        onPress={() => handlePreview(item.files)}
-                    >
-                        <Text style={styles.previewText}>Xem kết quả</Text>
-                    </Pressable>
+        <>
+            <View style={styles.card}>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.disease}>{item.reason}</Text>
+                    <Text style={styles.doctor}>
+                        👨‍⚕️ {`${item?.doctor?.firstName} ${item?.doctor?.lastName}`}
+                    </Text>
+                    <Text style={styles.time}>🕒 {item?.timebooking?.valueVi}</Text>
+                    <Text style={styles.time}>Giá khám: {item?.doctor?.Doctor_Infor?.priceTypeData?.valueVi}</Text>
+                    <View style={styles.buttonRow}>
+                        <Pressable
+                            style={styles.previewButton}
+                            onPress={() => handlePreview(item.files)}
+                        >
+                            <Text style={styles.previewText}>Xem kết quả</Text>
+                        </Pressable>
+                    </View>
                 </View>
             </View>
-        </View>
+            <View>
+                <Button title='Chat'></Button>
+            </View>
+        </>
+
+
     );
 
     return (

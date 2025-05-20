@@ -66,7 +66,7 @@ const BookingScreen = ({ route }) => {
         if (!patientName.trim()) newErrors.patientName = 'Vui lòng nhập họ tên bệnh nhân';
         if (!gender) newErrors.gender = 'Vui lòng chọn giới tính';
         if (!phone.trim()) newErrors.phone = 'Vui lòng nhập số điện thoại';
-        else if (!/^\d{10,11}$/.test(phone)) newErrors.phone = 'Số điện thoại không hợp lệ';
+        else if (!/^\d{9,10}$/.test(phone)) newErrors.phone = 'Số điện thoại không hợp lệ';
         if (!email.trim()) newErrors.email = 'Vui lòng nhập email';
         else if (!/^\S+@\S+\.\S+$/.test(email)) newErrors.email = 'Email không hợp lệ';
         if (!dateOfBirth) newErrors.dateOfBirth = 'Vui lòng chọn ngày sinh';
@@ -90,6 +90,8 @@ const BookingScreen = ({ route }) => {
     };
 
     const handleConfirmBooking = async () => {
+
+
         if (!validateForm()) return;
 
         setIsLoading(true);
@@ -107,7 +109,7 @@ const BookingScreen = ({ route }) => {
             gender,
             timeString
         };
-
+        console.log('check data sending', data)
         try {
             let res = await handleBooking(data);
 
@@ -391,7 +393,7 @@ const BookingScreen = ({ route }) => {
             </View>
 
             <TouchableOpacity
-                onPress={handleConfirmBooking}
+                onPress={() => { handleConfirmBooking() }}
                 style={styles.confirmButton}
                 disabled={isLoading}
             >

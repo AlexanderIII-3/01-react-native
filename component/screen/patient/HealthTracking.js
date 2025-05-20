@@ -60,65 +60,103 @@ const HealthTracking = () => {
     useEffect(() => {
         loadBMIData();
     }, []);
-
     const loadBMIData = async () => {
         try {
             const res = await fetchHeathTracking(userInfo.id);
+            if (res.EC !== 0) throw new Error(res.EM);
+
             const data = res.DT;
+            console.log('Fetched health data:', data);
 
-            if (data.length > 0 && !height) {
-                setHeight(data[0].height);
-            }
+            // Xử lý dữ liệu - chỉ lấy bản ghi mới nhất nếu có nhiều bản ghi cùng ngày
+            const uniqueData = data.reduce((acc, current) => {
+                const existing = acc.find(item => item.date === current.date);
+                if (!existing) {
+                    acc.push(current);
+                } else if (new Date(current.createdAt) > new Date(existing.createdAt)) {
+                    // Giữ bản ghi mới hơn
+                    acc[acc.indexOf(existing)] = current;
+                }
+                return acc;
+            }, []);
 
-            const bmiList = data.map(item => {
-                const h = item.height / 100;
-                return parseFloat((item.weight / (h * h)).toFixed(2));
-            });
+            // Sắp xếp theo ngày
+            uniqueData.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            const dateList = data.map(item => formatDate(+item.date));
+            const bmiList = uniqueData.map(item => {
+                return item.bmi ?? (item.height && item.weight
+                    ? parseFloat((item.weight / Math.pow(item.height / 100, 2)).toFixed(2))
+                    : null);
+            }).filter(bmi => bmi !== null);
+
+            const dateList = uniqueData.map(item => formatDate(+item.date));
+
             setBmiData(bmiList);
             setDates(dateList);
+
+            // Cập nhật height nếu chưa có
+            if (!height && uniqueData.length > 0) {
+                setHeight(uniqueData[0].height);
+            }
         } catch (error) {
             console.error("Lỗi tải dữ liệu:", error);
+            Alert.alert("Lỗi", "Không thể tải dữ liệu theo dõi sức khỏe");
         }
     };
-
     const calculateBMI = async () => {
-        const weightKg = parseFloat(weight);
+        try {
+            const weightKg = parseFloat(weight);
 
-        if (isNaN(weightKg) || weightKg <= 0) {
-            Alert.alert("Lỗi", "Vui lòng nhập cân nặng hợp lệ.");
-            return;
-        }
+            // Kiểm tra dữ liệu đầu vào
+            if (isNaN(weightKg) || weightKg <= 0) {
+                Alert.alert("Lỗi", "Vui lòng nhập cân nặng hợp lệ (lớn hơn 0).");
+                return;
+            }
 
-        if (!height) {
-            Alert.alert("Lỗi", "Không có chiều cao để tính BMI.");
-            return;
-        }
+            if (!height || height <= 0) {
+                Alert.alert("Lỗi", "Chiều cao chưa được thiết lập hoặc không hợp lệ.");
+                return;
+            }
 
-        const heightM = height / 100;
-        const bmi = weightKg / (heightM * heightM);
+            if (!userInfo?.id) {
+                Alert.alert("Lỗi", "Không xác định được thông tin người dùng.");
+                return;
+            }
 
-        const now = new Date();
-        const dateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            // Tính toán BMI
+            const heightM = height / 100;
+            const bmiValue = parseFloat((weightKg / (heightM * heightM)).toFixed(2));
 
-        const newRecord = {
-            patientId: 3,
-            weight: weightKg,
-            height,
-            bmi: parseFloat(bmi.toFixed(2)),
-            date: dateOnly,
-            actor: "USER",
-        };
+            // Tạo record mới
+            const now = new Date();
+            const dateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
-        const res = await handleSaveInforPatient(newRecord);
+            const newRecord = {
+                patientId: userInfo.id,  // Sử dụng userInfo.id thay vì hardcode
+                weight: weightKg,
+                height: height,
+                bmi: parseFloat(bmiValue),
+                date: dateOnly,
+                actor: "USER",
+            };
 
-        if (res && res.EC === 0) {
-            setBmiData(prev => [...prev, newRecord.bmi]);
-            setDates(prev => [...prev, formatDate(dateOnly)]);
-            setWeight('');
-        } else {
-            Alert.alert("Lỗi", "Không thể lưu dữ liệu.");
+
+            // Gọi API
+            const res = await handleSaveInforPatient(newRecord);
+
+            if (res && res.EC === 0) {
+                // Cập nhật state và hiển thị thông báo
+                setBmiData(prev => [...prev, parseFloat(bmiValue)]);
+                setDates(prev => [...prev, formatDate(dateOnly)]);
+                setWeight('');
+                loadBMIData()
+                Alert.alert("Thành công", "Đã lưu chỉ số BMI mới!");
+            } else {
+                Alert.alert("Lỗi", res?.EM || "Không thể lưu dữ liệu.");
+            }
+        } catch (error) {
+            console.error("Lỗi khi tính BMI:", error);
+            Alert.alert("Lỗi", "Đã xảy ra lỗi khi lưu dữ liệu BMI.");
         }
     };
 
@@ -137,7 +175,7 @@ const HealthTracking = () => {
                     onChangeText={setWeight}
                 />
 
-                <Button title="Tính BMI" onPress={calculateBMI} />
+                <Button title="Tính BMI" onPress={() => { calculateBMI() }} />
 
                 {bmiData.length > 0 ? (
                     <LineChart
