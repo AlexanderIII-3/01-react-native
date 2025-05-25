@@ -14,6 +14,7 @@ import Login from '../screen/auth/Login';
 import ConfirmScreen from '../screen/Doctor/booking/ConfirmScreen';
 import MedicalHistoryScreen from '../screen/patient/HistoryScreen';
 import HealthTracking from '../screen/patient/HealthTracking';
+import DoctorApp from '../section/specialty/DoctorApp';
 const Stack = createNativeStackNavigator()
 
 const HomeLayOut = () => {
@@ -26,11 +27,7 @@ const HomeLayOut = () => {
                 name='login'
 
             >
-            </Stack.Screen>
- */}
-
-
-
+            </Stack.Screen> */}
 
             <Stack.Screen
                 component={HomeScreen}
@@ -53,6 +50,10 @@ const HomeLayOut = () => {
             <Stack.Screen
                 options={{ header: () => <Header></Header> }}
                 name='health' component={HealthTracking} />
+
+            <Stack.Screen
+                options={{ header: () => <Header></Header> }}
+                name='doctor-specialty' component={DoctorApp} />
 
 
 

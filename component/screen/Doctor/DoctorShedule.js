@@ -8,28 +8,28 @@ import { useToast } from 'react-native-toast-notifications';
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { getListTimeBooking } from '../../../redux/slices/doctorReducer'
-const DoctorSchedule = ({ profileDoctor }) => {
+const DoctorSchedule = ({ doctorId }) => {
     const toast = useToast();
     const dispatch = useDispatch()
     const navigation = useNavigation();
 
     const [date, setDate] = useState(null);
     const [allDay, setAllDay] = useState([]);
-    const [doctorId, setDoctorId] = useState(null);
+    const [doctorID, setDoctorId] = useState(null);
     const [listTime, setListTime] = useState([]);
 
     useEffect(() => {
         const allDays = buildAllDays();
         setAllDay(allDays);
 
-        if (profileDoctor?.id) {
-            setDoctorId(profileDoctor.id);
+        if (doctorId) {
+            setDoctorId(doctorId);
         }
-    }, [profileDoctor]);
+    }, [doctorId]);
 
     useEffect(() => {
         if (doctorId && date) {
-            fetchSchedule(doctorId, date);
+            fetchSchedule(doctorID, date);
         }
     }, [doctorId, date]);
 

@@ -46,7 +46,7 @@ const BookingScreen = ({ route }) => {
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [dateBooking, setDateBooking] = useState('');
     const [timeString, setTimeString] = useState('');
-
+    const [nameClinic, setNameClinic] = useState(doctorInfo.Doctor_Infor.nameClinic || '');
     useEffect(() => {
         const name = `${userInfo.firstName} ${userInfo.lastName}`;
         setPatientName(name);
@@ -107,9 +107,9 @@ const BookingScreen = ({ route }) => {
             doctorId,
             timeTypeSel,
             gender,
-            timeString
+            timeString,
+            nameClinic
         };
-        console.log('check data sending', data)
         try {
             let res = await handleBooking(data);
 

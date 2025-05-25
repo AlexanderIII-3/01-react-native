@@ -1,10 +1,17 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { section, } from "../../ultis/Const";
+import { useNavigation } from "@react-navigation/native";
+
 
 
 
 const SpecialtySection = (props) => {
+
+    const navigation = useNavigation();
+    const viewDetailDoctor = (item) => {
+        navigation.navigate("doctor-specialty", { specialtyId: item.id })
+    }
     const { listSpecialty } = props
     return (
         <View style={[styles.container, section.container]}>
@@ -24,10 +31,13 @@ const SpecialtySection = (props) => {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ paddingHorizontal: 16 }} // Thêm padding cho 2 bên
                 renderItem={({ item }) => (
-                    <View style={[styles.card, section.card]}>
-                        <Image source={{ uri: item.image }} style={[styles.image, section.image]} />
-                        <Text style={[styles.cardText, section.cardText]}>{[item.name]}</Text>
-                    </View>
+
+                    <TouchableOpacity onPress={() => viewDetailDoctor(item)}>
+                        <View style={[styles.card, section.card]}>
+                            <Image source={{ uri: item.image }} style={[styles.image, section.image]} />
+                            <Text style={[styles.cardText, section.cardText]}>{[item.name]}</Text>
+                        </View>
+                    </TouchableOpacity>
                 )}
             />
         </View>

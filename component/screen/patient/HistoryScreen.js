@@ -66,9 +66,7 @@ const MedicalHistoryScreen = () => {
                     </View>
                 </View>
             </View>
-            <View>
-                <Button title='Chat'></Button>
-            </View>
+
         </>
 
 

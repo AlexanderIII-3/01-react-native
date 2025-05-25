@@ -63,3 +63,15 @@ export const fetchUserBookings = (patientId) => {
 export const cancelBooking = (bokingId) => {
     return axios.post(`/api/v1/cancel-booking`, { bokingId })
 }
+export const fetDoctorSpecialty = (router) => {
+
+    return axios.get(`/api/v1/get-all-doctor-province?specialtyId=${router.specialtyId}&province=${router.location}`)
+}
+export const fetchProvinces = () => {
+
+    return axios.get('/api/v1/get-all-province')
+}
+export const fetchSpecialtyById = (id) => {
+    return axios.get(`/api/v1/get-specialty-by-id?id=${id}`)
+
+}
