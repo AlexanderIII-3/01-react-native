@@ -8,12 +8,25 @@ import { WebView } from 'react-native-webview';
 import ExtraInforDoctor from "./ExtraInfoDoctor";
 import { useDispatch } from "react-redux";
 import { getDoctorInfo } from '../../../redux/slices/doctorReducer'
+import { fetchDetailDoctor } from "../../../service/userService";
 const DetailDoctor = ({ route }) => {
 
-
-
+    const dispatch = useDispatch()
 
     const { doctorId } = route.params;
+    const fetchProfileDoctor = async () => {
+        const resDetail = await fetchDetailDoctor(doctorId)
+        console.log("🚀 ~ file: DetailDoctor.js:15 ~ fetchProfileDoctor ~ resDetail:", resDetail.DT)
+
+
+        await dispatch(getDoctorInfo(resDetail.DT))
+
+    }
+
+    useEffect(() => {
+        fetchProfileDoctor()
+
+    }, [doctorId]);
 
 
 

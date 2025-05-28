@@ -10,12 +10,9 @@ const ProfileDoctor = (props) => {
     const [profileDoctor, setProfileDoctor] = useState([])
     const { doctorId } = props;
 
-
     const fetchProfileDoctor = async (doctorId) => {
         const resDetail = await fetchDetailDoctor(doctorId)
         setProfileDoctor(resDetail.DT)
-
-
     }
 
     useEffect(() => {

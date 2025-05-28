@@ -48,6 +48,7 @@ const BookingScreen = ({ route }) => {
     const [timeString, setTimeString] = useState('');
     const [nameClinic, setNameClinic] = useState(doctorInfo.Doctor_Infor.nameClinic || '');
     useEffect(() => {
+
         const name = `${userInfo.firstName} ${userInfo.lastName}`;
         setPatientName(name);
         setPhone(userInfo.phoneNumber);
@@ -108,7 +109,7 @@ const BookingScreen = ({ route }) => {
             timeTypeSel,
             gender,
             timeString,
-            nameClinic
+
         };
         try {
             let res = await handleBooking(data);
@@ -183,7 +184,7 @@ const BookingScreen = ({ route }) => {
                         </View>
                         <View style={styles.clinicInfoContainer}>
                             <Icon name="hospital-o" size={16} color="#4a90e2" />
-                            <Text style={styles.clinicInfo}> {doctorInfo?.Doctor_Infor?.nameClinic}</Text>
+                            <Text style={styles.clinicInfo}> {doctorInfo?.Doctor_Infor?.clinicData?.name || ""}</Text>
                         </View>
                         <View style={styles.addressContainer}>
                             <Icon name="map-marker" size={16} color="#4a90e2" />
