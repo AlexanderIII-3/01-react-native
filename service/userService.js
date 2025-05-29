@@ -75,3 +75,13 @@ export const fetchSpecialtyById = (id) => {
     return axios.get(`/api/v1/get-specialty-by-id?id=${id}`)
 
 }
+export const handleRegisterService = (data) => {
+    return axios.post('/api/v1/register', data)
+}
+export const handleVerifyEmailService = (email) => {
+    return axios.get(`/api/v1/verify-email?email=${email}`)
+}
+export const resetPasswordService = (data) => {
+    console.log(data)
+    return axios.post('/api/v1/reset-password', data)
+}

@@ -15,6 +15,8 @@ import ConfirmScreen from '../screen/Doctor/booking/ConfirmScreen';
 import MedicalHistoryScreen from '../screen/patient/HistoryScreen';
 import HealthTracking from '../screen/patient/HealthTracking';
 import DoctorApp from '../section/specialty/DoctorApp';
+import Register from '../screen/auth/Register';
+import ForgotPassword from '../screen/auth/ForgotPassword';
 const Stack = createNativeStackNavigator()
 
 const HomeLayOut = () => {
@@ -22,12 +24,30 @@ const HomeLayOut = () => {
     return (
         <Stack.Navigator>
 
-            {/* <Stack.Screen
+            <Stack.Screen
+                options={{ headerShown: false }}
                 component={Login}
                 name='login'
 
             >
-            </Stack.Screen> */}
+            </Stack.Screen>
+
+            <Stack.Screen
+                options={{ headerShown: false }}
+                component={Register}
+                name='register'
+
+            >
+            </Stack.Screen>
+
+
+            <Stack.Screen
+                options={{ headerShown: false }}
+                component={ForgotPassword}
+                name='ForgotPassword'
+
+            >
+            </Stack.Screen>
 
             <Stack.Screen
                 component={HomeScreen}
